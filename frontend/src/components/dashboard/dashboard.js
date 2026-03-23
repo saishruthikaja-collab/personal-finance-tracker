@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
 import { getProfile, updateProfile } from '../../services/api';
 import { getTransactions, getSummary } from '../../services/api';
 import TransactionForm from '../transactions/TransactionForm';
@@ -25,6 +25,7 @@ const Dashboard = () => {
     const [success, setSuccess] = useState('');
 
     const navigate = useNavigate();
+    const location = useLocation();
 
     const handleLogout = useCallback(() => {
         localStorage.removeItem('token');
@@ -233,6 +234,22 @@ const Dashboard = () => {
                         onTransactionUpdated={fetchTransactions}
                     />
                 </div>
+            </div>
+
+            {/* Bottom Navigation with Links to all modules */}
+            <div className="bottom-nav">
+                <Link to="/dashboard" className={`nav-item ${location.pathname === '/dashboard' ? 'active' : ''}`}>
+                    Dashboard
+                </Link>
+                <Link to="/transactions" className={`nav-item ${location.pathname === '/transactions' ? 'active' : ''}`}>
+                    Transactions
+                </Link>
+                <Link to="/budget" className={`nav-item ${location.pathname === '/budget' ? 'active' : ''}`}>
+                    Budget
+                </Link>
+                <Link to="/profile" className={`nav-item ${location.pathname === '/profile' ? 'active' : ''}`}>
+                    Profile
+                </Link>
             </div>
         </div>
     );

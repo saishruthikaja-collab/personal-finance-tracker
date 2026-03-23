@@ -3,6 +3,7 @@ import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-d
 import SignUp from './components/auth/SignUp';
 import SignIn from './components/auth/SignIn';
 import Dashboard from './components/dashboard/dashboard';
+import BudgetDashboard from './components/budget/BudgetDashboard'; // ← This is correct
 import './App.css';
 
 // Protected Route component
@@ -24,6 +25,12 @@ function App() {
           <Route path="/dashboard" element={
             <ProtectedRoute>
               <Dashboard />
+            </ProtectedRoute>
+          } />
+          {/* ADD THIS NEW ROUTE */}
+          <Route path="/budget" element={
+            <ProtectedRoute>
+              <BudgetDashboard />
             </ProtectedRoute>
           } />
           <Route path="/" element={<Navigate to="/signup" />} />

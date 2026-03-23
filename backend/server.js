@@ -24,6 +24,8 @@ app.use(cors({
 
 // Route files
 app.use('/api/auth', require('./routes/authRoutes'));
+app.use('/api/budgets', require('./routes/budgetRoutes'));
+app.use('/api/savings', require('./routes/savingsRoutes'));
 
 // Home route
 app.get('/', (req, res) => {
