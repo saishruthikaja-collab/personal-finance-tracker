@@ -1,0 +1,122 @@
+.charts-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-bottom: 80px;
+}
+
+.charts-container h2 {
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.charts-subtitle {
+    color: #666;
+    margin-bottom: 30px;
+}
+
+/* Summary Cards */
+.summary-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.summary-card {
+    background: white;
+    padding: 1.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+.summary-card.income {
+    border-top: 4px solid #48bb78;
+}
+
+.summary-card.expense {
+    border-top: 4px solid #f56565;
+}
+
+.summary-card.balance {
+    border-top: 4px solid #667eea;
+}
+
+.summary-card h3 {
+    margin: 0 0 10px 0;
+    color: #666;
+    font-size: 14px;
+}
+
+.summary-card .amount {
+    margin: 0;
+    font-size: 24px;
+    font-weight: bold;
+    color: #333;
+}
+
+/* Chart Cards */
+.chart-card {
+    background: white;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 30px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.chart-card h3 {
+    margin-top: 0;
+    margin-bottom: 20px;
+    color: #333;
+    font-size: 18px;
+}
+
+.chart-container {
+    height: 300px;
+    position: relative;
+}
+
+.pie-chart {
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.no-data {
+    text-align: center;
+    color: #999;
+    padding: 40px;
+}
+
+/* Tips Section */
+.tips-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    margin-top: 20px;
+}
+
+.tips-section h4 {
+    margin: 0 0 15px 0;
+    font-size: 18px;
+}
+
+.tips-section ul {
+    margin: 0;
+    padding-left: 20px;
+}
+
+.tips-section li {
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.loading {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    font-size: 1.2rem;
+    color: #666;
+}

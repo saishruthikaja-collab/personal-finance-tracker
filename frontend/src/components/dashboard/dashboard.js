@@ -250,6 +250,9 @@ const Dashboard = () => {
                 <Link to="/profile" className={`nav-item ${location.pathname === '/profile' ? 'active' : ''}`}>
                     Profile
                 </Link>
+                <Link to="/charts" className={`nav-item ${location.pathname === '/charts' ? 'active' : ''}`}>
+    Charts
+</Link>
             </div>
         </div>
     );
