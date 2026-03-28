@@ -43,3 +43,4 @@ app.listen(PORT, () => {
     console.log(`📝 API URL: http://localhost:${PORT}`);
 });
 app.use('/api/transactions', require('./routes/transactionRoutes'));
+app.use('/api/forum', require('./routes/forumRoutes'));

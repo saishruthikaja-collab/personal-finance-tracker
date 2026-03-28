@@ -36,4 +36,14 @@ export const createSavings = (savingsData) => API.post('/savings', savingsData).
 export const addToSavings = (id, amount) => API.put(`/savings/${id}/add`, { amount }).then(res => res.data);
 export const deleteSavings = (id) => API.delete(`/savings/${id}`).then(res => res.data);
 
+// Forum endpoints
+export const getPosts = () => API.get('/forum/posts').then(res => res.data);
+export const createPost = (postData) => API.post('/forum/posts', postData).then(res => res.data);
+export const likePost = (postId) => API.post(`/forum/posts/${postId}/like`).then(res => res.data);
+export const deletePost = (postId) => API.delete(`/forum/posts/${postId}`).then(res => res.data);
+
+export const getComments = (postId) => API.get(`/forum/posts/${postId}/comments`).then(res => res.data);
+export const createComment = (postId, content) => API.post(`/forum/posts/${postId}/comments`, { content }).then(res => res.data);
+export const likeComment = (commentId) => API.post(`/forum/comments/${commentId}/like`).then(res => res.data);
+export const deleteComment = (commentId) => API.delete(`/forum/comments/${commentId}`).then(res => res.data);
 export default API;

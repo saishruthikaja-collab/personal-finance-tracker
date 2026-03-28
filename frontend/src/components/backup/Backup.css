@@ -1,0 +1,97 @@
+.backup-container {
+    padding: 40px;
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+.backup-container h2 {
+    color: #333;
+    margin-bottom: 5px;
+}
+
+.backup-subtitle {
+    color: #666;
+    margin-bottom: 30px;
+}
+
+.backup-message {
+    background: #c6f6d5;
+    color: #22543d;
+    padding: 12px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+.backup-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 30px;
+    margin-bottom: 30px;
+}
+
+.backup-card {
+    background: white;
+    border-radius: 10px;
+    padding: 30px;
+    text-align: center;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.backup-icon {
+    font-size: 48px;
+    margin-bottom: 15px;
+}
+
+.backup-card h3 {
+    margin: 0 0 10px 0;
+    color: #333;
+}
+
+.backup-card p {
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.backup-btn {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    width: 100%;
+    transition: background 0.3s;
+}
+
+.backup-btn.google {
+    background: #4285f4;
+    color: white;
+}
+
+.backup-btn.google:hover {
+    background: #3367d6;
+}
+
+.backup-btn.dropbox {
+    background: #0061ff;
+    color: white;
+}
+
+.backup-btn.dropbox:hover {
+    background: #0050cc;
+}
+
+.backup-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.backup-note {
+    background: #f8f9fa;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    color: #666;
+    font-size: 14px;
+}

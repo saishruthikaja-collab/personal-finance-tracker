@@ -5,7 +5,10 @@ import SignIn from './components/auth/SignIn';
 import Dashboard from './components/dashboard/dashboard';
 import BudgetDashboard from './components/budget/BudgetDashboard';
 import Charts from './components/charts/Charts';
+import Forum from './components/forum/Forum';
+import Profile from './components/profile/Profile';
 import './App.css';
+import Backup from './components/backup/Backup';
 
 // Protected Route component
 const ProtectedRoute = ({ children }) => {
@@ -24,7 +27,7 @@ function App() {
           <Route path="/signup" element={<SignUp />} />
           <Route path="/signin" element={<SignIn />} />
           
-          <Route path="/dashboard" element={
+          <Route path="/transactions" element={
             <ProtectedRoute>
               <Dashboard />
             </ProtectedRoute>
@@ -42,20 +45,24 @@ function App() {
             </ProtectedRoute>
           } />
           
-          {/* Add these two routes */}
-          <Route path="/transactions" element={
+          <Route path="/forum" element={
             <ProtectedRoute>
-              <Dashboard />
+              <Forum />
             </ProtectedRoute>
           } />
           
           <Route path="/profile" element={
             <ProtectedRoute>
-              <Dashboard />
+              <Profile />
             </ProtectedRoute>
           } />
+          <Route path="/backup" element={
+    <ProtectedRoute>
+        <Backup />
+    </ProtectedRoute>
+} />
           
-          <Route path="/" element={<Navigate to="/signup" />} />
+          <Route path="/" element={<Navigate to="/transactions" />} />
         </Routes>
       </div>
     </Router>

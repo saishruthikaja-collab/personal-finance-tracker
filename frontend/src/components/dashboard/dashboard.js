@@ -5,6 +5,8 @@ import { getTransactions, getSummary } from '../../services/api';
 import TransactionForm from '../transactions/TransactionForm';
 import TransactionList from '../transactions/TransactionList';
 import './Dashboard.css';
+import jsPDF from 'jspdf';
+import autoTable from 'jspdf-autotable';
 
 const Dashboard = () => {
     const [user, setUser] = useState(null);
@@ -19,10 +21,7 @@ const Dashboard = () => {
         balance: 0,
         categories: {}
     });
-    const [showProfileForm, setShowProfileForm] = useState(false);
     const [loading, setLoading] = useState(true);
-    const [error, setError] = useState('');
-    const [success, setSuccess] = useState('');
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -69,34 +68,86 @@ const Dashboard = () => {
         loadData();
     }, [fetchProfile, fetchTransactions]);
 
-    const handleProfileUpdate = async (e) => {
-        e.preventDefault();
-        setError('');
-        setSuccess('');
-        setLoading(true);
-
-        try {
-            const response = await updateProfile(profile);
-            setSuccess('Profile updated successfully!');
-            setProfile(response.data.profile);
-            setShowProfileForm(false);
-            
-            const storedUser = JSON.parse(localStorage.getItem('user'));
-            storedUser.profile = response.data.profile;
-            localStorage.setItem('user', JSON.stringify(storedUser));
-        } catch (error) {
-            console.error('Error updating profile:', error);
-            setError('Failed to update profile');
-        } finally {
-            setLoading(false);
+    const handleExportCSV = () => {
+        const allTransactions = transactions;
+        
+        if (allTransactions.length === 0) {
+            alert('No transactions to export!');
+            return;
         }
+        
+        const headers = ['Date', 'Type', 'Category', 'Amount', 'Description'];
+        const rows = allTransactions.map(t => [
+            new Date(t.date).toLocaleDateString(),
+            t.type,
+            t.category,
+            t.amount,
+            t.description || ''
+        ]);
+        
+        const csvContent = [
+            headers.join(','),
+            ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
+        ].join('\n');
+        
+        const blob = new Blob([csvContent], { type: 'text/csv' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `transactions_${new Date().toISOString().split('T')[0]}.csv`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        
+        alert('CSV exported successfully!');
     };
 
-    const handleChange = (e) => {
-        setProfile({
-            ...profile,
-            [e.target.name]: parseFloat(e.target.value) || 0
+    const handleExportPDF = () => {
+        const allTransactions = transactions;
+        
+        if (allTransactions.length === 0) {
+            alert('No transactions to export!');
+            return;
+        }
+        
+        const doc = new jsPDF();
+        
+        // Add title
+        doc.setFontSize(18);
+        doc.text('Transaction Report', 14, 20);
+        doc.setFontSize(10);
+        doc.text(`Generated: ${new Date().toLocaleDateString()}`, 14, 30);
+        
+        // Prepare table data
+        const tableData = allTransactions.map(t => [
+            new Date(t.date).toLocaleDateString(),
+            t.type.charAt(0).toUpperCase() + t.type.slice(1),
+            t.category,
+            `$${t.amount.toFixed(2)}`,
+            t.description || '-'
+        ]);
+        
+        // Add table using autoTable
+        autoTable(doc, {
+            startY: 40,
+            head: [['Date', 'Type', 'Category', 'Amount', 'Description']],
+            body: tableData,
+            theme: 'striped',
+            styles: { fontSize: 8 },
+            headStyles: { fillColor: [102, 126, 234] }
         });
+        
+        // Add summary
+        const finalY = doc.lastAutoTable.finalY + 10;
+        doc.setFontSize(12);
+        doc.text(`Total Income: $${summary.totalIncome?.toFixed(2)}`, 14, finalY);
+        doc.text(`Total Expenses: $${summary.totalExpense?.toFixed(2)}`, 14, finalY + 8);
+        doc.text(`Balance: $${summary.balance?.toFixed(2)}`, 14, finalY + 16);
+        
+        // Save PDF
+        doc.save(`transactions_${new Date().toISOString().split('T')[0]}.pdf`);
+        alert('PDF exported successfully!');
     };
 
     if (loading && !user) {
@@ -110,18 +161,20 @@ const Dashboard = () => {
                     <h1>💰 Finance Tracker</h1>
                 </div>
                 <div className="nav-menu">
-                    <span className="nav-email">{user?.email}</span>
-                    <button 
-                        className="profile-btn"
-                        onClick={() => setShowProfileForm(!showProfileForm)}
-                    >
+                    <Link to="/profile" className="profile-btn">
                         Profile
-                    </button>
+                    </Link>
                     <button 
                         className="logout-btn"
                         onClick={handleLogout}
                     >
                         Logout
+                    </button>
+                    <button className="export-btn" onClick={handleExportCSV}>
+                        📥 Export CSV
+                    </button>
+                    <button className="pdf-btn" onClick={handleExportPDF}>
+                        📄 Export PDF
                     </button>
                 </div>
             </nav>
@@ -129,86 +182,6 @@ const Dashboard = () => {
             <div className="dashboard-main">
                 <h2>Welcome to Your Dashboard</h2>
                 <p className="dashboard-subtitle">Module 2: Expense & Income Tracking</p>
-
-                {showProfileForm && (
-                    <div className="profile-section">
-                        <h3>Update Your Profile</h3>
-                        {error && <div className="error-message">{error}</div>}
-                        {success && <div className="success-message">{success}</div>}
-                        
-                        <form onSubmit={handleProfileUpdate} className="profile-form">
-                            <div className="form-group">
-                                <label>Monthly Income ($)</label>
-                                <input
-                                    type="number"
-                                    name="monthlyIncome"
-                                    value={profile.monthlyIncome}
-                                    onChange={handleChange}
-                                    min="0"
-                                    step="100"
-                                    placeholder="Enter your monthly income"
-                                />
-                            </div>
-                            
-                            <div className="form-group">
-                                <label>Savings Goal ($)</label>
-                                <input
-                                    type="number"
-                                    name="savingsGoal"
-                                    value={profile.savingsGoal}
-                                    onChange={handleChange}
-                                    min="0"
-                                    step="100"
-                                    placeholder="Enter your savings goal"
-                                />
-                            </div>
-                            
-                            <button 
-                                type="submit" 
-                                className="save-btn"
-                                disabled={loading}
-                            >
-                                {loading ? 'Saving...' : 'Save Profile'}
-                            </button>
-                            <button 
-                                type="button" 
-                                className="cancel-btn"
-                                onClick={() => setShowProfileForm(false)}
-                            >
-                                Cancel
-                            </button>
-                        </form>
-                    </div>
-                )}
-
-                {/* Profile Summary */}
-                <div className="profile-summary">
-                    <h3>Your Profile Summary</h3>
-                    <div className="summary-cards">
-                        <div className="summary-card">
-                            <span className="card-label">Email</span>
-                            <span className="card-value">{user?.email}</span>
-                        </div>
-                        <div className="summary-card">
-                            <span className="card-label">Role</span>
-                            <span className="card-value capitalize">{user?.role}</span>
-                        </div>
-                        <div className="summary-card">
-                            <span className="card-label">Monthly Income</span>
-                            <span className="card-value">${profile.monthlyIncome?.toLocaleString()}</span>
-                        </div>
-                        <div className="summary-card">
-                            <span className="card-label">Savings Goal</span>
-                            <span className="card-value">${profile.savingsGoal?.toLocaleString()}</span>
-                        </div>
-                    </div>
-                    <button 
-                        className="edit-profile-btn"
-                        onClick={() => setShowProfileForm(true)}
-                    >
-                        Edit Profile
-                    </button>
-                </div>
 
                 {/* Summary Cards */}
                 <div className="summary-cards">
@@ -236,23 +209,20 @@ const Dashboard = () => {
                 </div>
             </div>
 
-            {/* Bottom Navigation with Links to all modules */}
+            {/* Bottom Navigation - Backup removed */}
             <div className="bottom-nav">
-                <Link to="/dashboard" className={`nav-item ${location.pathname === '/dashboard' ? 'active' : ''}`}>
-                    Dashboard
-                </Link>
                 <Link to="/transactions" className={`nav-item ${location.pathname === '/transactions' ? 'active' : ''}`}>
                     Transactions
                 </Link>
                 <Link to="/budget" className={`nav-item ${location.pathname === '/budget' ? 'active' : ''}`}>
                     Budget
                 </Link>
-                <Link to="/profile" className={`nav-item ${location.pathname === '/profile' ? 'active' : ''}`}>
-                    Profile
-                </Link>
                 <Link to="/charts" className={`nav-item ${location.pathname === '/charts' ? 'active' : ''}`}>
-    Charts
-</Link>
+                    Charts
+                </Link>
+                <Link to="/forum" className={`nav-item ${location.pathname === '/forum' ? 'active' : ''}`}>
+                    Forum
+                </Link>
             </div>
         </div>
     );

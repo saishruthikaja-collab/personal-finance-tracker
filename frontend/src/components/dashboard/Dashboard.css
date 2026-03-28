@@ -40,3 +40,25 @@
     margin: 0 auto;
     padding-bottom: 80px;
 }
+.export-btn {
+    padding: 0.5rem 1rem;
+    background: #48bb78;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
+
+.export-btn:hover {
+    background: #38a169;
+}
+.pdf-btn {
+    padding: 0.5rem 1rem;
+    background: #f56565;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.9rem;
+}
